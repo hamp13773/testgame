@@ -3,18 +3,22 @@
     static void Main(string[] args)
     {
         Console.CursorVisible = false;
+        Random random = new Random();
         bool isPlaying = true;
         bool isAlive = true;
-        int enemyX, enemyY;
-        int enemyDX = 0, enemyDY = -1;
+        int enemyPositionX;
+        int enemyPositionY;
+        int enemyDirectionX = 0;
+        int enemyDirectionY = -1;
         int dotsCount = 0;
         int playerDotsCount = 0;
         int sleepTime = 150;
-        int playerX , playerY;
-        int directionX = 0, directionY = 1;
-        char[,] map = ReadMap("map1", out playerX, out playerY,out enemyX, out enemyY, ref dotsCount);
-        Random random = new Random();
-
+        int playerPositionX;
+        int playerPositionY;
+        int directionX = 0;
+        int directionY = 1;
+        string mapName = "map1";
+        char[,] map = ReadMap(mapName, out playerPositionX, out playerPositionY,out enemyPositionX, out enemyPositionY, ref dotsCount);
         DrawMap(map);
 
         while (isPlaying)
@@ -28,25 +32,25 @@
                 ChangeDirection(key, ref directionX, ref directionY);
             }
 
-            if (map[playerX + directionX, playerY + directionY] != '#')
+            if (map[playerPositionX + directionX, playerPositionY + directionY] != '#')
             {
-                Move(directionX, directionY, ref playerX, ref playerY, '@', map);
-                CollectDots(playerX, playerY, map, ref playerDotsCount);
+                Move(directionX, directionY, ref playerPositionX, ref playerPositionY, '@', map);
+                CollectDots(playerPositionX, playerPositionY, map, ref playerDotsCount);
             }
 
-            if (map[enemyX + enemyDX, enemyY + enemyDY] != '#')
+            if (map[enemyPositionX + enemyDirectionX, enemyPositionY + enemyDirectionY] != '#')
             {
-                Move(enemyDX, enemyDY, ref enemyX, ref enemyY, '$', map);
+                Move(enemyDirectionX, enemyDirectionY, ref enemyPositionX, ref enemyPositionY, '$', map);
             }
 
             else
             {
-                ChangeDirection(random, ref enemyDX, ref enemyDY);
+                ChangeDirection(random, ref enemyDirectionX, ref enemyDirectionY);
             }
 
             System.Threading.Thread.Sleep(sleepTime);
 
-            if (enemyX == playerX && enemyY == playerY)
+            if (enemyPositionX == playerPositionX && enemyPositionY == playerPositionY)
             {
                 isAlive = false;
             }
@@ -58,7 +62,7 @@
                 Console.WriteLine("Вы победили");
             }
 
-            else if (!isAlive)
+            else if (isAlive == false)
             {
                 isPlaying = false;
                 Console.Clear();
@@ -128,13 +132,13 @@
         }
     }
 
-    static void Move(int directionX, int directionY,ref int X,ref int Y, char symbol, char[,] map)
+    static void Move(int directionX, int directionY,ref int x,ref int y, char symbol, char[,] map)
     {
-            Console.SetCursorPosition(Y, X);
-            Console.Write(map[X, Y]);
-            X += directionX;
-            Y += directionY;
-            Console.SetCursorPosition(Y, X);
+            Console.SetCursorPosition(y, x);
+            Console.Write(map[x, y]);
+            x += directionX;
+            y += directionY;
+            Console.SetCursorPosition(y, x);
             Console.Write(symbol);
     }
 
@@ -187,4 +191,4 @@
                 break;
         }
     }
-    }
+}
